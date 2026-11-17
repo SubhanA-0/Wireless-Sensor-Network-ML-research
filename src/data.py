@@ -62,12 +62,45 @@ def standardise_columns(df):
     return df
 
 
+UCI_ZIP_URL = ("https://archive.ics.uci.edu/static/public/844/"
+               "average+localization+error+ale+in+sensor+node+localization+process+in+wsns.zip")
+
+
+def _read_table_from_zip(zip_bytes):
+    """Return the first .csv/.xlsx/.xls table inside a zip (given as bytes) as a DataFrame."""
+    import io
+    import zipfile
+
+    with zipfile.ZipFile(io.BytesIO(zip_bytes)) as z:
+        names = [n for n in z.namelist() if n.lower().endswith((".csv", ".xlsx", ".xls"))]
+        if not names:
+            raise ValueError(f"No csv/xlsx file inside the zip. Contents: {z.namelist()}")
+        name = names[0]
+        print(f"[data] reading {name} from the zip")
+        with z.open(name) as f:
+            content = f.read()
+    if name.lower().endswith(".csv"):
+        return pd.read_csv(io.BytesIO(content))
+    return pd.read_excel(io.BytesIO(content))
+
+
+def _fetch_raw(uci_id):
+    """Get the raw table: try ucimlrepo first, then fall back to UCI's direct zip download."""
+    try:
+        from ucimlrepo import fetch_ucirepo  # imported here so the rest of the repo works offline
+
+        return fetch_ucirepo(id=uci_id).data.original
+    except Exception as e:  # this dataset is not flagged as importable on UCI, so ucimlrepo refuses it
+        print(f"[data] ucimlrepo could not fetch it ({type(e).__name__}); trying the direct zip download ...")
+    import urllib.request
+
+    with urllib.request.urlopen(UCI_ZIP_URL, timeout=60) as r:
+        return _read_table_from_zip(r.read())
+
+
 def download_uci(out_path=None, uci_id=844):
     """Download the dataset from the UCI repository and save a clean CSV (needs internet)."""
-    from ucimlrepo import fetch_ucirepo  # imported here so the rest of the repo works offline
-
-    d = fetch_ucirepo(id=uci_id)
-    raw = d.data.original  # features + targets (+ any extra columns) in one DataFrame
+    raw = _fetch_raw(uci_id)  # features + targets (+ any extra columns) in one DataFrame
     df = standardise_columns(raw)
     out_path = Path(out_path) if out_path else resolve("data/raw/ale_wsn.csv")
     out_path.parent.mkdir(parents=True, exist_ok=True)

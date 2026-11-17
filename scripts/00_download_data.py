@@ -17,9 +17,10 @@ def main():
     out = resolve(cfg["data"]["raw_path"])
     try:
         df = download_uci(out, uci_id=cfg["data"]["uci_id"])
-    except ConnectionError:
-        sys.exit("Could not reach the UCI server. Download the CSV manually (see data/README.md) "
-                 f"and save it as {out}")
+    except Exception as e:
+        sys.exit(f"Automatic download failed ({type(e).__name__}: {e}).\n"
+                 "Download the file by hand from https://archive.ics.uci.edu/dataset/844 (Download button), "
+                 f"unzip it and save the table as {out}\n(details: data/README.md)")
     print(df.head())
     print("Done. Next: python scripts/01_eda.py")
 

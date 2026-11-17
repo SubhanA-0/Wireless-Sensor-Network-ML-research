@@ -49,7 +49,7 @@ def main():
 
     plot_metric_comparison(comp, fdir / "paper_vs_ours_metrics.png")
     plot_importance(imp, sel, fdir / "feature_importance.png")
-    print("\nSaved figures. Now write the 'Comparison with the original paper' section of your report.")
+    print("\nSaved figures.")
 
 
 if __name__ == "__main__":

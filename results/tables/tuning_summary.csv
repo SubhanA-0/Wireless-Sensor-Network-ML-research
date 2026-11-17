@@ -1,0 +1,4 @@
+optimizer,n_estimators,max_depth,min_samples_split,min_samples_leaf,cv_rmse,time_s,n_trials
+Grid Search,200,5,2,1,0.20229610590353728,126.28289929999983,400
+Random Search,57,15,2,2,0.20768438973597084,18.751411399999597,50
+Bayesian Opt.,198,10,4,1,0.20174661743125016,29.718065200000183,50
