@@ -1,4 +1,4 @@
-"""Step 1: look at the data and check it matches the paper's Table 1 and correlation figure.
+"""Step 1: summary statistics, comparison with the paper's Table 1, correlations.
 
 Writes: results/tables/describe.csv, sanity_check_vs_paper_table1.csv, correlations_vs_paper.csv
         results/figures/eda_distributions.png, eda_correlation.png
@@ -32,7 +32,7 @@ def main():
     desc.to_csv(tdir / "describe.csv")
     print("\nSummary statistics:\n", desc.round(3).to_string())
 
-    # --- is this the same dataset the paper used? compare with paper Table 1 ---
+    # compare with the paper's Table 1
     rows = []
     for col, stats in TABLE1.items():
         for stat, paper_val in stats.items():
@@ -45,9 +45,8 @@ def main():
     print(f"\nPaper Table 1 check: {n_ok}/{len(chk)} statistics match (rtol 1%).")
     if n_ok < len(chk):
         print("Mismatches:\n", chk[~chk["match"]].to_string(index=False))
-        print("-> If many mismatch, you may have a different version of the dataset. Note it in your report.")
 
-    # --- correlations with ALE ---
+    # correlation of each feature with ALE
     corr = df.corr()[TARGET].drop(TARGET)
     cmp = pd.DataFrame({"paper": pd.Series(CORR_WITH_ALE), "ours": corr}).loc[FEATURES]
     cmp["difference"] = cmp["ours"] - cmp["paper"]
@@ -56,7 +55,7 @@ def main():
 
     plot_distributions(df, fdir / "eda_distributions.png")
     plot_correlation(df, fdir / "eda_correlation.png")
-    print("\nSaved tables to results/tables and figures to results/figures. Next: python scripts/02_tune_and_evaluate.py")
+    print("\nSaved tables to results/tables and figures to results/figures.")
 
 
 if __name__ == "__main__":

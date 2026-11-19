@@ -28,6 +28,6 @@ This saves a clean CSV at `data/raw/ale_wsn.csv`.
 ## Check you have the right data
 
 Run `python scripts/01_eda.py`. It compares your summary statistics with the paper's Table 1 and prints how many match
-(ALE should have mean 0.98, min 0.39, max 2.57, 107 rows). If many statistics differ, say so in your report.
+(ALE should have mean 0.98, min 0.39, max 2.57, 107 rows). Many mismatches would suggest a different version of the dataset.
 
 The file is tiny, so you can commit it to git. Dataset licence and terms are on the UCI page.

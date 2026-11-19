@@ -1,4 +1,4 @@
-"""Step 2: the core of Phase 1.
+"""Step 2: baseline, tuning and test-set evaluation.
 
   80/20 split -> baseline RF -> tune RF with Grid / Random / Bayesian search (5-fold CV, train set only)
   -> evaluate each tuned RF on the held-out test set -> save tables and figures.
@@ -24,20 +24,19 @@ from src.plots import plot_pred_vs_actual
 def main():
     cfg = load_config()
     df = load_data(cfg)
-    print(f"Loaded {len(df)} rows. Seed = {cfg['seed']}. Tuning (Grid Search can take a few minutes)...")
+    print(f"Loaded {len(df)} rows. Seed = {cfg['seed']}.")
     res = run_phase1(df, cfg)
 
-    print(f"\nTrain rows: {res['n_train']}, test rows: {res['n_test']}  (a tiny test set -> noisy results!)")
+    print(f"\nTrain rows: {res['n_train']}, test rows: {res['n_test']}")
     print("\n=== Tuning (train set, 5-fold CV) ===")
     print(tuning_table(res["tuned"]).round(3).to_string(index=False))
     print("\n=== Test-set metrics ===")
     print(metrics_table(res["metrics"]).round(4).to_string(index=False))
-    print(f"\nBest optimizer by CROSS-VALIDATION score: {res['selected_by_cv']} "
-          "(selection uses CV, not the test set, to avoid leakage)")
+    print(f"\nBest optimizer by CV score: {res['selected_by_cv']}")
 
     save_phase1(res, cfg)
     plot_pred_vs_actual(res["y_test"], res["preds"], res["metrics"], out_dir(cfg, "figures") / "pred_vs_actual.png")
-    print("\nSaved results. Next: python scripts/03_compare_with_paper.py")
+    print("\nSaved results to results/.")
 
 
 if __name__ == "__main__":

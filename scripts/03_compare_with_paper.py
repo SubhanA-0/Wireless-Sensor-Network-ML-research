@@ -1,4 +1,4 @@
-"""Step 3: put our numbers next to the paper's and print the points you need for the 'differences' discussion.
+"""Step 3: paper-reported vs our results (tables, optimizer ranking, feature importance).
 
 Needs the outputs of step 2. Writes results/figures/{paper_vs_ours_metrics,feature_importance}.png
 """
@@ -30,15 +30,14 @@ def main():
 
     print("=== Paper-reported vs ours (test set) ===")
     print(comp.round(4).to_string(index=False))
-    print("\nNote: the paper's MSE and RMSE are not consistent with each other; rely on RMSE/MAE/R2/MAPE for comparison.")
 
-    # Do we reach the same conclusion about which optimizer is best?
+    # optimizer ranking
     paper_rank = sorted(PAPER, key=lambda o: PAPER[o]["RMSE"])
     ours_rank = sorted(["GS", "RS", "BO"], key=lambda o: res["metrics"][o]["RMSE"])
     print("\nOptimizer ranking by test RMSE (best first):")
     print("  paper:", " < ".join(OPTIMIZER_LABELS[o] for o in paper_rank))
     print("  ours :", " < ".join(OPTIMIZER_LABELS[o] for o in ours_rank))
-    print("  best by CV score (our selection rule):", OPTIMIZER_LABELS[res["selected_by_cv"]])
+    print("  best by CV score:", OPTIMIZER_LABELS[res["selected_by_cv"]])
 
     sel = res["selected_by_cv"]
     feats = list(FEATURE_IMPORTANCE)
@@ -49,7 +48,7 @@ def main():
 
     plot_metric_comparison(comp, fdir / "paper_vs_ours_metrics.png")
     plot_importance(imp, sel, fdir / "feature_importance.png")
-    print("\nSaved figures.")
+    print("\nSaved figures to results/figures.")
 
 
 if __name__ == "__main__":

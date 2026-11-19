@@ -36,7 +36,7 @@ def evaluate_all(tuned, X_train, y_train, X_test, y_test, seed):
 
 
 def select_by_cv(tuned):
-    """Pick the optimizer with the best CROSS-VALIDATION score (never the test score, which would leak)."""
+    """Optimizer with the best cross-validation score (the test set is not used for selection)."""
     return max(tuned, key=lambda k: tuned[k]["cv_score"])
 
 

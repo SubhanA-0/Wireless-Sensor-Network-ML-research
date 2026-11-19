@@ -30,7 +30,7 @@ def main():
         run(s)
     if not args.skip_robustness:
         run("04_seed_robustness.py")
-    print("\nAll done. Tables are in results/tables, figures in results/figures.")
+    print("\nDone. Outputs are in results/.")
 
 
 if __name__ == "__main__":

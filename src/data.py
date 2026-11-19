@@ -57,7 +57,7 @@ def standardise_columns(df):
         )
     dropped = [c for c in df.columns if c not in FEATURES + [TARGET]]
     if dropped:
-        print(f"[data] dropped non-feature columns: {dropped} (the ALE std column must not be used as a feature)")
+        print(f"[data] dropped non-feature columns: {dropped}")
     df = df[FEATURES + [TARGET]].apply(pd.to_numeric, errors="coerce")
     return df
 

@@ -22,7 +22,6 @@ def main():
                  "Download the file by hand from https://archive.ics.uci.edu/dataset/844 (Download button), "
                  f"unzip it and save the table as {out}\n(details: data/README.md)")
     print(df.head())
-    print("Done. Next: python scripts/01_eda.py")
 
 
 if __name__ == "__main__":

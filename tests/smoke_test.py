@@ -1,11 +1,7 @@
-"""Smoke test: checks that your installation and the code work, WITHOUT needing the real dataset.
+"""Smoke test on synthetic data (same shape as the real table, tiny search budgets).
 
-It builds a small SYNTHETIC table (random numbers that only mimic the shape of the real data), runs the
-pipeline with tiny search budgets and checks that nothing crashes and the outputs look sane.
-
-!! The synthetic numbers mean nothing scientifically. Never use them in your report. !!
-
-Run:  python tests/smoke_test.py
+Checks that the code runs end to end; the numbers are not meaningful.
+Run: python tests/smoke_test.py
 """
 import copy
 import sys
@@ -58,7 +54,7 @@ def main():
     assert len(comp) == 3 * len(METRIC_NAMES)
     print("ok: pipeline runs end to end; R2 per model:",
           {k: round(v["R2"], 2) for k, v in res["metrics"].items()})
-    print("\nSmoke test passed. (Numbers above come from synthetic data and are meaningless.)")
+    print("\nSmoke test passed (synthetic data).")
 
 
 if __name__ == "__main__":

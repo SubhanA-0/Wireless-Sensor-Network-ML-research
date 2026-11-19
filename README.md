@@ -7,7 +7,7 @@ This repository reproduces the main experiment of
 
 > I. K. Nti, S. S. Rout, J. Yeboah, **"An optimized ensemble model for predicting average localization error of wireless sensor networks"**, *Decision Analytics Journal* 12 (2024) 100510. https://doi.org/10.1016/j.dajour.2024.100510
 
-**In one paragraph.** In a wireless sensor network, most sensors estimate their own position from a few "anchor" sensors. The average gap between estimated and true position is the Average Localization Error (ALE). The paper trains a **Random Forest** to predict ALE from four network settings (anchor ratio, transmission range, node density, iterations) and compares three ways of tuning the forest: **Grid Search, Random Search and Bayesian Optimization**. We re-implement this, report our own numbers, and compare them honestly with the paper's.
+**In one paragraph.** In a wireless sensor network, most sensors estimate their own position from a few "anchor" sensors. The average gap between estimated and true position is the Average Localization Error (ALE). The paper trains a **Random Forest** to predict ALE from four network settings (anchor ratio, transmission range, node density, iterations) and compares three ways of tuning the forest: **Grid Search, Random Search and Bayesian Optimization**. We re-implement this and compare our results with the paper's.
 
 ---
 
@@ -84,7 +84,7 @@ Or open `notebooks/01_phase1_reproduction.ipynb` and *Run All*. It uses the same
 * Tuning: 5-fold CV on the training set, scoring `neg_mean_squared_error`; Random Search and Bayesian Optimization get 50 trials each.
 * Metrics: MAE, MSE, RMSE, R2, MAPE (MAPE is a fraction, as in the paper).
 
-## Deviations from the paper (stated openly)
+## Deviations from the paper
 
 1. **Bayesian optimization uses Optuna (TPE)**, not scikit-optimize/Hyperopt (maintenance and compatibility). It is still a sequential model-based optimizer.
 2. **Search grids and trial budgets are our choice.** The paper only gives the ranges (its Table 2). Grid Search uses a discrete grid inside those ranges; Random Search and Bayesian Optimization sample integers over the same ranges.
@@ -92,22 +92,21 @@ Or open `notebooks/01_phase1_reproduction.ipynb` and *Run All*. It uses the same
 4. **A fixed seed (42)** is used; the paper reports none. We also report variation across seeds (step 4).
 5. **Scaling is fitted inside the CV pipeline** (no leakage).
 
-## Notes on the paper (things we noticed while reproducing)
+## Notes on the paper
 
 * The reported MSE and RMSE are not consistent with each other (e.g. Grid Search: RMSE 0.238 implies an MSE of about 0.057, but 0.046 is reported); RS's MSE is never printed. We therefore compare mainly on RMSE, MAE, R2 and MAPE.
 * The text mentions six optimization algorithms, but only three (GS, RS, BO) have results.
 * Grid and Random Search are both listed with 52.74 s, which looks like a copy error.
 * Random Search's best forest has only 10 trees, and the test set has about 22 rows, so the ranking of optimizers is probably fragile. Step 4 tests this.
 
-## Honesty notes
+## Notes
 
-* Everything in `results/` is produced by this code. Paper-reported numbers live only in `src/paper_reference.py` and are always labelled "paper".
+* Everything in `results/` is produced by this code. Paper-reported numbers live only in `src/paper_reference.py`.
 * The dataset is **simulated** (modified Cuckoo Search simulations by Singh et al.), not measured on real hardware.
-* `tests/smoke_test.py` uses synthetic numbers purely to check that the code runs. Never quote them.
+* `tests/smoke_test.py` uses synthetic data only to check that the code runs.
 
 ## Data and citations
 
 * Dataset: A. Singh, V. Kotiyal, S. Sharma, J. Nagar, C.-C. Lee, *Average Localization Error (ALE) in sensor node localization process in WSNs*, UCI Machine Learning Repository, 2020. https://doi.org/10.24432/C5ZP6R
 * Dataset paper: A. Singh et al., "A machine learning approach to predict the average localization error with applications to wireless sensor networks," *IEEE Access* 8 (2020) 208253-208263.
 * Libraries: scikit-learn, pandas, NumPy, SciPy, Optuna, Matplotlib, Seaborn.
-* Code adapted from public repositories: **none** (all code written by the group).

@@ -1,10 +1,6 @@
-"""Step 4 (recommended): how much do the results change if the random 80/20 split changes?
+"""Step 4: repeat split -> tune -> test over several seeds and report mean and std.
 
-With only 107 rows the test set has ~22 rows, so a single split is noisy. This repeats the whole
-split -> tune -> test pipeline for several seeds and reports mean +/- std. It answers: "is the paper's
-claim that Random Search beats Grid Search and Bayesian Optimization stable, or just one lucky split?"
-
-Runtime: n_seeds x (time of step 2). Set robustness.n_seeds in configs/config.yaml.
+Runtime is roughly n_seeds times that of step 2 (robustness.n_seeds in configs/config.yaml).
 Writes: results/tables/seed_robustness_long.csv, seed_robustness_summary.csv, results/figures/seed_robustness.png
 """
 import sys
@@ -53,7 +49,7 @@ def main():
     print("\nNumber of splits where each optimizer had the lowest test RMSE:\n", wins.to_string())
 
     plot_seed_robustness(long_df[long_df["optimizer"] != "Baseline"], fdir / "seed_robustness.png")
-    print("\nSaved. Use the mean +/- std table in your report next to the single-split results.")
+    print("\nSaved to results/.")
 
 
 if __name__ == "__main__":
